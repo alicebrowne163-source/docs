@@ -9,7 +9,7 @@ verifiable addresses, or recovery addresses. New data is normalized on write. Ex
 backward-compatible lookup, but you should run the `normalize-phone-numbers` migration command after upgrading to converge all
 rows to E.164.
 
-This guide is for self-hosted Kratos administrators (OSS and OEL). Ory Network customers don't need to take any action.
+This guide is for self-hosted Ory Kratos administrators (OSS and OEL). Ory Network customers don't need to take any action.
 
 :::important
 
@@ -20,7 +20,7 @@ rollback after migration. To revert, you will need to restore your backed-up dat
 
 ## Why normalize
 
-Before this change, Kratos stored phone numbers exactly as users entered them. A user who registered with `+49 176 671 11 638` and
+Before this change, Ory Kratos stored phone numbers exactly as users entered them. A user who registered with `+49 176 671 11 638` and
 another who registered with `+4917667111638` would create two separate identities for the same phone number. Lookups, recovery,
 and verification could behave inconsistently depending on the input format.
 
@@ -39,11 +39,11 @@ until the new code is deployed.
 
 Run the steps in this exact order:
 
-1. **Deploy the new Kratos version.**  
+1. Deploy the new Ory Kratos version.
    The new code normalizes phone numbers on write and uses a backward-compatible lookup that matches both E.164 and legacy
    formats. Existing users can still log in with whatever format they originally registered with.
 
-2. **Run the migration command.**  
+2. Run the migration command.
    After the deploy completes and traffic is stable, run:
 
    ```
@@ -71,10 +71,10 @@ The command uses keyset pagination to scan three tables in batches:
 | `identity_recovery_addresses`     | `value`      | `via = 'sms'`          |
 
 For each row, the command parses the value with the [`nyaruka/phonenumbers`](https://github.com/nyaruka/phonenumbers) library and
-rewrites it to E.164 if parsing succeeds. Rows that fail to parse (for example, an OIDC subject that happens to start with `+`)
+rewrites it to E.164 if parsing succeeds. Rows that fail to parse - for example, an OIDC subject that happens to start with `+` - 
 are left untouched and counted as skipped.
 
-The command is **idempotent**: running it twice is safe. The second run only reports skipped rows.
+The command is idempotent: running it twice is safe. The second run only reports skipped rows.
 
 ## Flags
 
