@@ -447,6 +447,7 @@ const networkSidebar = [
               "keto/guides/list-api-display-objects",
               "keto/guides/expand-api-display-who-has-access",
               "keto/guides/rbac",
+              "keto/guides/strict-mode",
             ],
           },
         ],
