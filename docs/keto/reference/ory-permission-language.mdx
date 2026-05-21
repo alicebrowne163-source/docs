@@ -96,8 +96,6 @@ class File implements Namespace {
 
 `this.related.x.traverse(g => ...)` iterates over the objects in relation `x` and evaluates the inner expression for each one.
 
-**Check via a relation on the related object:**
-
 ```ts
 class Group implements Namespace {
   related: {
@@ -116,31 +114,6 @@ class File implements Namespace {
 ```
 
 `view` is granted if the subject is a member of any group in `viewerGroups`.
-
-**Check via a permission on the related object:**
-
-```ts
-class Group implements Namespace {
-  related: {
-    members: User[]
-  }
-  permits = {
-    isMember: (ctx: Context) => this.related.members.includes(ctx.subject),
-  }
-}
-
-class File implements Namespace {
-  related: {
-    viewerGroups: Group[]
-  }
-  permits = {
-    view: (ctx: Context) => this.related.viewerGroups.traverse((g) => g.permits.isMember(ctx)),
-  }
-}
-```
-
-Same result, but delegating to a named permission on `Group` instead of accessing the relation directly. Use this when the
-permission logic on the related namespace is more complex than a single `includes` check.
 
 ### Boolean operators
 
